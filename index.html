@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>U.S. Citizenship Exam Prep</title>
+<style>
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+#card {
+    width: 350px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+}
+
+#question, #answer, #response-buttons {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#show-answer {
+    background-color: #28a745;
+}
+
+#show-answer:hover {
+    background-color: #1e7e34;
+}
+</style>
+</head>
+<body>
+<div id="card">
+    <div id="question">Question will appear here</div>
+    <div id="answer" style="display:none;">Answer will appear here</div>
+    <button id="show-answer">Show Answer</button>
+    <div id="response-buttons" style="display:none;">
+        <button onclick="recordResponse(true)">Correct</button>
+        <button onclick="recordResponse(false)">Incorrect</button>
+    </div>
+</div>
+<script>
+const questions = [
+    { question: "What is the supreme law of the land?", answer: "The Constitution", score: 0 },
+    { question: "What does the Constitution do?", answer: "Sets up the government, defines the government, protects basic rights of Americans", score: 0 },
+    { question: "The idea of self-government is in the first three words of the Constitution. What are these words?", answer: "We the People", score: 0 },
+    { question: "What is an amendment?", answer: "A change (to the Constitution), an addition (to the Constitution)", score: 0 },
+    { question: "What do we call the first ten amendments to the Constitution?", answer: "The Bill of Rights", score: 0 }
+];
+
+let currentQuestionIndex = -1;
+
+document.getElementById('show-answer').addEventListener('click', function() {
+    document.getElementById('answer').style.display = 'block';
+    document.getElementById('response-buttons').style.display = 'block';
+    this.style.display = 'none';
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === ' ') {
+        document.getElementById('show-answer').click();
+    }
+});
+
+function recordResponse(isCorrect) {
+    const questionObj = questions[currentQuestionIndex];
+    questionObj.score = isCorrect ? questionObj.score + 1 : questionObj.score - 1;
+    nextQuestion();
+}
+
+function nextQuestion() {
+    questions.sort((a, b) => a.score - b.score); // Prioritize lower scored questions
+    currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+    const questionObj = questions[currentQuestionIndex];
+    document.getElementById('question').textContent = questionObj.question;
+    document.getElementById('answer').textContent = questionObj.answer;
+    document.getElementById('answer').style.display = 'none';
+    document.getElementById('show-answer').style.display = 'inline';
+    document.getElementById('response-buttons').style.display = 'none';
+}
+
+nextQuestion();  // Initialize with the first question
+</script>
+</body>
+</html>
